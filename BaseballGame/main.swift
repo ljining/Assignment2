@@ -11,7 +11,7 @@ import Foundation
 class NumberBaseball {
     
     func start() {
-        var array = [1...9]
+        var array = Array(1...9)
         array.shuffle()
         array.removeSubrange(3...8)
 
