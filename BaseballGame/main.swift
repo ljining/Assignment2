@@ -7,5 +7,18 @@
 
 import Foundation
 
-print("Hello, World!")
 
+class NumberBaseball {
+    
+    func start() {
+        var array = [1...9]
+        array.shuffle()
+        array.removeSubrange(3...8)
+
+        print(array)
+    }
+    
+}
+
+let game = NumberBaseball()
+game.start()
