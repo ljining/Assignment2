@@ -10,17 +10,37 @@ import Foundation
 
 class NumberBaseball {
     
+    //게임 시작 함수
     func start() {
+        
+        //랜덤 정답 만드는 함수
+        func makeAnswer() -> Int {
+            var array = Array(1...9)
+            array.shuffle()
+            array.removeSubrange(3...8)
+            
+            let answer = Int(array.map { String($0) }.joined()) ?? 0   //joined() 배열 요소 하나의 문자열로 합쳐서 사용
+            return answer
+        }
+        let generatedAnswer = makeAnswer()
+        
+        
         while true{
             print("< 게임을 시작합니다 >")
             print("숫자를 입력하세요")
             let input = readLine()       //값 입력 받기
             if validInput(input) {
-                startGame(input)
-                break                    //게임 실행 후 루프 종료
+                if startGame(input!, generatedAnswer) {
+                    break                    //게임 실행 후 루프 종료
+                }
             } else {
                 print("올바르지 않은 입력값입니다.")
             }
+            
+            //새로운 게임 시작
+            let game = NumberBaseball()
+            game.start()
+            
             
             //input 값이 유효한지 확인하는 함수
             func validInput(_ input: String?) -> Bool {
@@ -55,28 +75,26 @@ class NumberBaseball {
                 var strike = 0
                 var ball = 0
                 
-                
-                
-         
-            }
-            
-            //랜덤 정답 만드는 함수
-            func makeAnswer() -> Int {
-                var array = Array(1...9)
-                array.shuffle()
-                array.removeSubrange(3...8)
-                
-                guard let answer = Int(array.map { String($0) }.joined())   //joined() 배열 요소 하나의 문자열로 합쳐서 사용
-                else { print("Error")
+                for (index, char) in str1.enumerated() {    //str1 순회하는 동안 str1의 요소(=문자)와 해당 요소의 인덱스를 동시에 확인할 수 있도록한다.
+                    let answerIndex = str2.index(str2.startIndex, offsetBy: index) //str2에서 str2의 첫번째 인덱스로부터의 거리를 구한다.
+                    let answerChar = str2[answerIndex]  //str2에서 구한 인덱스의 거리에 위치해 있는 문자를 담을 상수를 만든다.
+                    
+                    if  answerChar == Character(str2) { //문자와 인덱스 둘 다 일치하는 경우
+                        strike += 1
+                    } else if str2.contains(char) {      //문자는 일치하는데 인덱스는 일치하지 않는 경우
+                        ball += 1
+                    }
                 }
-                return answer
+                
+                if strike == 3 {
+                    print("정답입니다!")
+                    return true
+                } else if strike > 0 || ball > 0 {
+                    print("\(strike)스트라이크 \(ball)볼")
+                }
+                
+                return false
             }
-            let generatedAnswer = makeAnswer()
-            
-            
-            let game = NumberBaseball()
-            game.start()
-            
         }
     }
 }
